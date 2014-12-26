@@ -128,9 +128,9 @@ until [[  "$NUM_REGISTERED_WORKERS" == "$NUM_WORKERS" ]]; do
     get_num_registered_workers
 done
 echo ""
-docker run -d --name cass1 -h cass1 -p 9042:9042 -p 9160:9160 poklet/cassandra
+docker run -d --name cass1${DOMAINNAME} -h cass1${DOMAINNAME} -p 9042:9042 -p 9160:9160 poklet/cassandra
 CASSIP=$(docker inspect -f "{{.NetworkSettings.IPAddress}}" cass1)
-add_hostname cass $CASSIP
+add_hostname cass${DOMAINNAME} $CASSIP
 
 echo ""
 print_cluster_info "$SHELLCOMMAND"

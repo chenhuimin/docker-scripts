@@ -21,7 +21,7 @@ function start_master() {
     sleep 3
     MASTER_IP=$(docker logs $MASTER 2>&1 | egrep '^MASTER_IP=' | awk -F= '{print $2}' | tr -d -c "[:digit:] .")
     echo "MASTER_IP:                     $MASTER_IP"
-    add_hostname master $MASTER_IP
+    add_hostname master${DOMAINNAME} $MASTER_IP
 }
 
 # starts a number of Spark/Shark workers
@@ -64,6 +64,8 @@ function print_cluster_info() {
     echo ""
     echo "to enable cluster name resolution add the following line to _the top_ of your host's /etc/resolv.conf:"
     echo "nameserver $NAMESERVER_IP"
+    echo ""
+    docker exec nameserver${DOMAINNAME} cat /etc/dnsmasq.d/0hosts
 }
 
 function get_num_registered_workers() {
@@ -84,7 +86,7 @@ function get_num_registered_workers() {
 function wait_for_master {
     if [[ "$SPARK_VERSION" == "0.7.3" ]]; then
         query_string="INFO HttpServer: akka://sparkMaster/user/HttpServer started"
-    elif [[ "$SPARK_VERSION" == "1.0.0" ]]; then
+    elif [[ "$SPARK_VERSION" == "latest" ]]; then
         query_string="MasterWebUI: Started MasterWebUI"
     else
         query_string="MasterWebUI: Started Master web UI"
@@ -98,11 +100,11 @@ function wait_for_master {
     done
     echo ""
     echo -n "waiting for nameserver to find master "
-    check_hostname result master "$MASTER_IP"
+    check_hostname result master${DOMAINNAME} "$MASTER_IP"
     until [ "$result" -eq 0 ]; do
         echo -n "."
         sleep 1
-        check_hostname result master "$MASTER_IP"
+        check_hostname result master${DOMAINNAME} "$MASTER_IP"
     done
     echo ""
     sleep 3
