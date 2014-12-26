@@ -128,6 +128,11 @@ until [[  "$NUM_REGISTERED_WORKERS" == "$NUM_WORKERS" ]]; do
     get_num_registered_workers
 done
 echo ""
+docker run -d --name cass1 -h cass1 -p 9042:9042 -p 9160:9160 poklet/cassandra
+CASSIP=$(docker inspect -f "{{.NetworkSettings.IPAddress}}" cass1)
+add_hostname cass $CASSIP
+
+echo ""
 print_cluster_info "$SHELLCOMMAND"
 if [[ "$start_shell" -eq 1 ]]; then
     SHELL_ID=$($SHELLCOMMAND | tail -n 1 | awk '{print $4}')

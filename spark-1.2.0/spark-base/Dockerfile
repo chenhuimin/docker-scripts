@@ -1,4 +1,4 @@
-# Spark 1.0.0
+# Spark 1.2.0
 # Version 1.0.0
 #
 FROM omriiluz/apache-hadoop-hdfs-precise:1.2.1
@@ -6,7 +6,7 @@ FROM omriiluz/apache-hadoop-hdfs-precise:1.2.1
 MAINTAINER omri@iluz.net
 
 ENV SCALA_VERSION 2.10.3
-ENV SPARK_VERSION 1.0.0
+ENV SPARK_VERSION 1.2.0
 ENV SCALA_HOME /opt/scala-$SCALA_VERSION
 ENV SPARK_HOME /opt/spark-$SPARK_VERSION
 ENV PATH $SPARK_HOME:$SCALA_HOME/bin:$PATH
