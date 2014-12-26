@@ -5,6 +5,11 @@ NAMESERVER_IP=
 DOMAINNAME=
 #".mycluster.com"
 
+function add_hostname(){
+  #echo "address=\"/$1/$2\"" > $DNSFILE
+  docker exec nameserver redirect "address=\"/$1/$2\"" /etc/dnsmasq.d/0hosts
+}
+
 # starts the dnsmasq nameserver
 function start_nameserver() {
     DNSDIR="/tmp/dnsdir_$RANDOM"
@@ -27,8 +32,7 @@ function start_nameserver() {
     sleep 2
     NAMESERVER_IP=$(docker logs $NAMESERVER 2>&1 | egrep '^NAMESERVER_IP=' | awk -F= '{print $2}' | tr -d -c "[:digit:] .")
     echo "NAMESERVER_IP:                 $NAMESERVER_IP"
-    echo "address=\"/nameserver/$NAMESERVER_IP\"" > $DNSFILE
-    docker exec nameserver redirect "address=\"/nameserver/$NAMESERVER_IP\"" /etc/dnsmasq.d/0hosts
+    add_hostname nameserver $NAMESERVER_IP
 }
 
 # contact nameserver container and resolve IP address (used for checking whether nameserver has registered

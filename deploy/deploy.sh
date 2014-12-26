@@ -111,8 +111,7 @@ fi
 
 start_nameserver $NAMESERVER_IMAGE
 wait_for_nameserver
-exit 0
-start_master ${image_name}-master $image_version
+start_master ${image_name}-cluster-master $image_version
 wait_for_master
 if [ "$image_type" == "spark" ]; then
     SHELLCOMMAND="$BASEDIR/start_shell.sh -i ${image_name}-shell:$SPARK_VERSION -n $NAMESERVER $VOLUME_MAP"
@@ -120,7 +119,7 @@ elif [ "$image_type" == "shark" ]; then
     SHELLCOMMAND="$BASEDIR/start_shell.sh -i ${image_name}-shell:$SHARK_VERSION -n $NAMESERVER $VOLUME_MAP"
 fi
 
-start_workers ${image_name}-worker $image_version
+start_workers ${image_name}-cluster-worker $image_version
 get_num_registered_workers
 echo -n "waiting for workers to register "
 until [[  "$NUM_REGISTERED_WORKERS" == "$NUM_WORKERS" ]]; do

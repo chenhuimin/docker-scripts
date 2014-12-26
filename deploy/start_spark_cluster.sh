@@ -21,7 +21,7 @@ function start_master() {
     sleep 3
     MASTER_IP=$(docker logs $MASTER 2>&1 | egrep '^MASTER_IP=' | awk -F= '{print $2}' | tr -d -c "[:digit:] .")
     echo "MASTER_IP:                     $MASTER_IP"
-    echo "address=\"/master/$MASTER_IP\"" >> $DNSFILE
+    add_hostname master $MASTER_IP
 }
 
 # starts a number of Spark/Shark workers
@@ -42,7 +42,7 @@ function start_workers() {
 	echo "started worker container:  $WORKER"
 	sleep 3
 	WORKER_IP=$(docker logs $WORKER 2>&1 | egrep '^WORKER_IP=' | awk -F= '{print $2}' | tr -d -c "[:digit:] .")
-	echo "address=\"/$hostname/$WORKER_IP\"" >> $DNSFILE
+  add_hostname $hostname $WORKER_IP
     done
 }
 
