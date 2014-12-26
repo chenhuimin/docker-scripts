@@ -1,6 +1,6 @@
 FROM ubuntu:precise
 
-MAINTAINER amplab amp-docker@eecs.berkeley.edu
+MAINTAINER omri@iluz.net
 
 VOLUME [ "/etc/dnsmasq.d" ]
 
@@ -15,5 +15,8 @@ RUN echo "domain=cluster.com"  >> /etc/dnsmasq.conf
 RUN echo "nameserver 8.8.8.8" >> /etc/resolv.dnsmasq.conf
 
 ADD files /root/dnsmasq_files
+ADD files/redirect /bin/redirect
+RUN chmod +x /bin/redirect
+
 
 CMD ["/root/dnsmasq_files/default_cmd"]

@@ -13,9 +13,9 @@ function start_nameserver() {
 
     echo "starting nameserver container"
     if [ "$DEBUG" -gt 0 ]; then
-        echo sudo docker run -d -h nameserver${DOMAINNAME} -v $DNSDIR:/etc/dnsmasq.d $1
+        echo docker run -d --name nameserver${DOMAINNAME} -h nameserver${DOMAINNAME} -v $DNSDIR:/etc/dnsmasq.d $1
     fi
-    NAMESERVER=$(sudo docker run -d -h nameserver${DOMAINNAME} -v $DNSDIR:/etc/dnsmasq.d $1)
+    NAMESERVER=$(docker run -d --name nameserver${DOMAINNAME} -h nameserver${DOMAINNAME} -v $DNSDIR:/etc/dnsmasq.d $1)
 
     if [ "$NAMESERVER" = "" ]; then
         echo "error: could not start nameserver container from image $1"
@@ -25,7 +25,7 @@ function start_nameserver() {
     echo "started nameserver container:  $NAMESERVER"
     echo "DNS host->IP file mapped:      $DNSFILE"
     sleep 2
-    NAMESERVER_IP=$(sudo docker logs $NAMESERVER 2>&1 | egrep '^NAMESERVER_IP=' | awk -F= '{print $2}' | tr -d -c "[:digit:] .")
+    NAMESERVER_IP=$(docker logs $NAMESERVER 2>&1 | egrep '^NAMESERVER_IP=' | awk -F= '{print $2}' | tr -d -c "[:digit:] .")
     echo "NAMESERVER_IP:                 $NAMESERVER_IP"
     echo "address=\"/nameserver/$NAMESERVER_IP\"" > $DNSFILE
 }

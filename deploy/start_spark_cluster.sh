@@ -8,9 +8,9 @@ NUM_REGISTERED_WORKERS=0
 function start_master() {
     echo "starting master container"
     if [ "$DEBUG" -gt 0 ]; then
-        echo sudo docker run -d --dns $NAMESERVER_IP -h master${DOMAINNAME} $VOLUME_MAP $1:$2
+        echo docker run -d --dns $NAMESERVER_IP -h master${DOMAINNAME} --name master${DOMAINNAME} $VOLUME_MAP $1:$2
     fi
-    MASTER=$(sudo docker run -d --dns $NAMESERVER_IP -h master${DOMAINNAME} $VOLUME_MAP $1:$2)
+    MASTER=$(docker run -d --dns $NAMESERVER_IP -h master${DOMAINNAME} --name master${DOMAINNAME} $VOLUME_MAP $1:$2)
 
     if [ "$MASTER" = "" ]; then
         echo "error: could not start master container from image $1:$2"
@@ -19,7 +19,7 @@ function start_master() {
 
     echo "started master container:      $MASTER"
     sleep 3
-    MASTER_IP=$(sudo docker logs $MASTER 2>&1 | egrep '^MASTER_IP=' | awk -F= '{print $2}' | tr -d -c "[:digit:] .")
+    MASTER_IP=$(docker logs $MASTER 2>&1 | egrep '^MASTER_IP=' | awk -F= '{print $2}' | tr -d -c "[:digit:] .")
     echo "MASTER_IP:                     $MASTER_IP"
     echo "address=\"/master/$MASTER_IP\"" >> $DNSFILE
 }
@@ -30,9 +30,9 @@ function start_workers() {
         echo "starting worker container"
 	hostname="worker${i}${DOMAINNAME}"
         if [ "$DEBUG" -gt 0 ]; then
-	    echo sudo docker run -d --dns $NAMESERVER_IP -h $hostname $VOLUME_MAP $1:$2 ${MASTER_IP}
+	    echo docker run -d --dns $NAMESERVER_IP -h $hostname --name $hostname $VOLUME_MAP $1:$2 ${MASTER_IP}
         fi
-	WORKER=$(sudo docker run -d --dns $NAMESERVER_IP -h $hostname $VOLUME_MAP $1:$2 ${MASTER_IP})
+	WORKER=$(docker run -d --dns $NAMESERVER_IP -h $hostname --name $hostname $VOLUME_MAP $1:$2 ${MASTER_IP})
 
         if [ "$WORKER" = "" ]; then
             echo "error: could not start worker container from image $1:$2"
@@ -41,7 +41,7 @@ function start_workers() {
 
 	echo "started worker container:  $WORKER"
 	sleep 3
-	WORKER_IP=$(sudo docker logs $WORKER 2>&1 | egrep '^WORKER_IP=' | awk -F= '{print $2}' | tr -d -c "[:digit:] .")
+	WORKER_IP=$(docker logs $WORKER 2>&1 | egrep '^WORKER_IP=' | awk -F= '{print $2}' | tr -d -c "[:digit:] .")
 	echo "address=\"/$hostname/$WORKER_IP\"" >> $DNSFILE
     done
 }
@@ -59,7 +59,7 @@ function print_cluster_info() {
     echo ""
     echo "/data mapped:               $VOLUME_MAP"
     echo ""
-    echo "kill master via:           sudo docker kill $MASTER"
+    echo "kill master via:           docker kill $MASTER"
     echo "***********************************************************************"
     echo ""
     echo "to enable cluster name resolution add the following line to _the top_ of your host's /etc/resolv.conf:"
@@ -67,7 +67,7 @@ function print_cluster_info() {
 }
 
 function get_num_registered_workers() {
-    if [[ "$SPARK_VERSION" == "0.7.3" ]]; then 
+    if [[ "$SPARK_VERSION" == "0.7.3" ]]; then
         DATA=$( curl --noproxy -s http://$MASTER_IP:8080/?format=json | tr -d '\n' | sed s/\"/\\\\\"/g)
     else
 	# Docker on Mac uses tinycore Linux with busybox which has a limited version wget (?)
@@ -90,11 +90,11 @@ function wait_for_master {
         query_string="MasterWebUI: Started Master web UI"
     fi
     echo -n "waiting for master "
-    sudo docker logs $MASTER | grep "$query_string" > /dev/null
+    docker logs $MASTER | grep "$query_string" > /dev/null
     until [ "$?" -eq 0 ]; do
         echo -n "."
         sleep 1
-        sudo docker logs $MASTER | grep "$query_string" > /dev/null;
+        docker logs $MASTER | grep "$query_string" > /dev/null;
     done
     echo ""
     echo -n "waiting for nameserver to find master "
