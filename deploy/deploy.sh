@@ -5,7 +5,7 @@ BASEDIR=$(cd $(dirname $0); pwd)
 
 spark_images=( "amplab/spark:0.9.0" "amplab/spark:0.9.1" "amplab/spark:1.0.0" "omriiluz/spark:latest")
 shark_images=( "amplab/shark:0.8.0" )
-NAMESERVER_IMAGE="amplab/dnsmasq-precise"
+NAMESERVER_IMAGE="omriiluz/dnsmasq-precise"
 
 start_shell=0
 VOLUME_MAP=""
@@ -111,6 +111,7 @@ fi
 
 start_nameserver $NAMESERVER_IMAGE
 wait_for_nameserver
+exit 0
 start_master ${image_name}-master $image_version
 wait_for_master
 if [ "$image_type" == "spark" ]; then
