@@ -5,7 +5,7 @@ FROM omriiluz/apache-hadoop-hdfs-precise:1.2.1
 
 MAINTAINER omri@iluz.net
 
-ENV SCALA_VERSION 2.10.3
+ENV SCALA_VERSION 2.10.4
 ENV SPARK_VERSION 1.2.0
 ENV SCALA_HOME /opt/scala-$SCALA_VERSION
 ENV SPARK_HOME /opt/spark-$SPARK_VERSION
