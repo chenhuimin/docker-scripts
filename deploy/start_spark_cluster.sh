@@ -3,6 +3,7 @@
 MASTER=-1
 MASTER_IP=
 NUM_REGISTERED_WORKERS=0
+STARTEDCONTAINERS=
 
 # starts the Spark/Shark master container
 function start_master() {
@@ -64,6 +65,8 @@ function print_cluster_info() {
     echo ""
     echo "to enable cluster name resolution add the following line to _the top_ of your host's /etc/resolv.conf:"
     echo "nameserver $NAMESERVER_IP"
+    echo ""
+    echo "Cleanup: docker rm -f $STARTEDCONTAINERS"
     echo ""
     docker exec nameserver${DOMAINNAME} cat /etc/dnsmasq.d/0hosts
 }
