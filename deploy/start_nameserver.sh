@@ -19,9 +19,9 @@ function start_nameserver() {
 
     echo "starting nameserver container"
     if [ "$DEBUG" -gt 0 ]; then
-        echo docker run -d --name nameserver${DOMAINNAME} -h nameserver${DOMAINNAME} -v $DNSDIR:/etc/dnsmasq.d -p 53:53 $1
+        echo docker run -d --name nameserver${DOMAINNAME} -h nameserver${DOMAINNAME} -v $DNSDIR:/etc/dnsmasq.d -p 53:53/udp $1
     fi
-    NAMESERVER=$(docker run -d --name nameserver${DOMAINNAME} -h nameserver${DOMAINNAME} -v $DNSDIR:/etc/dnsmasq.d -p 53:53 $1)
+    NAMESERVER=$(docker run -d --name nameserver${DOMAINNAME} -h nameserver${DOMAINNAME} -v $DNSDIR:/etc/dnsmasq.d -p 53:53/udp $1)
 
     if [ "$NAMESERVER" = "" ]; then
         echo "error: could not start nameserver container from image $1"
