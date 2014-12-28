@@ -18,5 +18,6 @@ ADD files /root/dnsmasq_files
 ADD files/redirect /bin/redirect
 RUN chmod +x /bin/redirect
 
+EXPOSE 53
 
 CMD ["/root/dnsmasq_files/default_cmd"]
