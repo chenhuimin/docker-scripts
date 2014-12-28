@@ -2,7 +2,7 @@
 
 NAMESERVER=-1
 NAMESERVER_IP=
-DOMAINNAME=
+DOMAINNAME=.cluster
 #".mycluster.com"
 
 function add_hostname(){
