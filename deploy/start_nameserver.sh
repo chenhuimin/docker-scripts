@@ -8,7 +8,7 @@ DOMAINNAME=.cluster
 function add_hostname(){
   #echo "address=\"/$1/$2\"" > $DNSFILE
   docker exec nameserver${DOMAINNAME} redirect "address=\"/$1/$2\"" /etc/dnsmasq.d/0hosts
-  STARTEDCONTAINERS=$STARTEDCONTAINERS $1
+  STARTEDCONTAINERS="$STARTEDCONTAINERS $1"
 }
 
 # starts the dnsmasq nameserver

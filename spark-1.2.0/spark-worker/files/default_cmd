@@ -19,4 +19,4 @@ sleep 5
 echo "starting Spark Worker"
 cp /root/spark_worker_files/run_spark_worker.sh /
 chmod a+rx /run_spark_worker.sh
-sudo -u hdfs MASTER=$MASTER NAMESERVER_IP=$NAMESERVER_IP /run_spark_worker.sh
+sudo -u hdfs MASTER=$MASTER SPARK_MASTER_IP=$SPARK_MASTER_IP /run_spark_worker.sh
