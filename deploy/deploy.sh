@@ -137,6 +137,13 @@ CASSIP=$(docker inspect -f "{{.NetworkSettings.IPAddress}}" cass1${DOMAINNAME})
 add_hostname cass${DOMAINNAME} $CASSIP
 
 echo ""
+docker run -d --name zookeeper${DOMAINNAME} wurstmeister/zookeeper:latest
+add_hostname zookeeper${DOMAINNAME} $(docker inspect -f "{{.NetworkSettings.IPAddress}}" zookeeper${DOMAINNAME})
+
+docker run -d --name kafka${DOMAINNAME} -h kafka${DOMAINNAME} --link zookeeper${DOMAINNAME}:zk -e KAFKA_ADVERTISED_PORT=9092 wurstmeister/kafka:0.8.1.1-1
+add_hostname kafka${DOMAINNAME} $(docker inspect -f "{{.NetworkSettings.IPAddress}}" kafka${DOMAINNAME})
+
+echo ""
 print_cluster_info "$SHELLCOMMAND"
 if [[ "$start_shell" -eq 1 ]]; then
     SHELL_ID=$($SHELLCOMMAND | tail -n 1 | awk '{print $4}')
