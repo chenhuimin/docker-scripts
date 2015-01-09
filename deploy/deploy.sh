@@ -110,8 +110,10 @@ else
 fi
 
 docker run -d --name etcd${DOMAINNAME} -h etcd${DOMAINNAME} -e ETCD_ADDR=etcd${DOMAINNAME}:4001 microbox/etcd -- etcd
-docker run -d --name skydns${DOMAINNAME} -e DOMAIN=.cluster --link etcd${DOMAINNAME}:etcd${DOMAINNAME} omriiluz/skydns
+aad_hostname etcd${DOMAINNAME} $(docker inspect -f "{{.NetworkSettings.IPAddress}}" etcd${DOMAINNAME})
 
+docker run -d --name skydns${DOMAINNAME} -e DOMAIN=.cluster --link etcd${DOMAINNAME}:etcd${DOMAINNAME} omriiluz/skydns
+add_hostname skydns${DOMAINNAME} $(docker inspect -f "{{.NetworkSettings.IPAddress}}" skydns${DOMAINNAME})
 
 start_nameserver $NAMESERVER_IMAGE
 wait_for_nameserver
