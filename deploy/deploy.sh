@@ -137,10 +137,10 @@ CASSIP=$(docker inspect -f "{{.NetworkSettings.IPAddress}}" cass1${DOMAINNAME})
 add_hostname cass${DOMAINNAME} $CASSIP
 
 echo ""
-docker run -d --name zookeeper${DOMAINNAME} wurstmeister/zookeeper:latest
+docker run -d --name zookeeper${DOMAINNAME} --dns $NAMESERVER_IP wurstmeister/zookeeper:latest
 add_hostname zookeeper${DOMAINNAME} $(docker inspect -f "{{.NetworkSettings.IPAddress}}" zookeeper${DOMAINNAME})
 
-docker run -d --name kafka${DOMAINNAME} -h kafka${DOMAINNAME} --link zookeeper${DOMAINNAME}:zk -e KAFKA_ADVERTISED_PORT=9092 wurstmeister/kafka:0.8.1.1-1
+docker run -d --name kafka${DOMAINNAME} -h kafka${DOMAINNAME} --dns $NAMESERVER_IP --link zookeeper${DOMAINNAME}:zk -e KAFKA_ADVERTISED_PORT=9092 wurstmeister/kafka:0.8.1.1-1
 add_hostname kafka${DOMAINNAME} $(docker inspect -f "{{.NetworkSettings.IPAddress}}" kafka${DOMAINNAME})
 
 echo ""
