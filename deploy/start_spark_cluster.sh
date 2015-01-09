@@ -9,9 +9,9 @@ STARTEDCONTAINERS=
 function start_master() {
     echo "starting master container"
     if [ "$DEBUG" -gt 0 ]; then
-        echo docker run -d --dns $NAMESERVER_IP -h master${DOMAINNAME} --name master${DOMAINNAME} -e SPARK_MASTER_IP=master${DOMAINNAME} -e MASTER=spark://master${DOMAINNAME}:7077 $VOLUME_MAP $1:$2
+        echo docker run -d --dns $NAMESERVER_IP --dns-search ${DOMAINNAME#.} -h master${DOMAINNAME} --name master${DOMAINNAME} -e SPARK_MASTER_IP=master${DOMAINNAME} -e MASTER=spark://master${DOMAINNAME}:7077 $VOLUME_MAP $1:$2
     fi
-    MASTER=$(docker run -d --dns $NAMESERVER_IP -h master${DOMAINNAME} --name master${DOMAINNAME} -e SPARK_MASTER_IP=master${DOMAINNAME} -e MASTER=spark://master${DOMAINNAME}:7077 $VOLUME_MAP $1:$2)
+    MASTER=$(docker run -d --dns $NAMESERVER_IP --dns-search ${DOMAINNAME#.} -h master${DOMAINNAME} --name master${DOMAINNAME} -e SPARK_MASTER_IP=master${DOMAINNAME} -e MASTER=spark://master${DOMAINNAME}:7077 $VOLUME_MAP $1:$2)
 
     if [ "$MASTER" = "" ]; then
         echo "error: could not start master container from image $1:$2"
@@ -31,9 +31,9 @@ function start_workers() {
         echo "starting worker container"
 	hostname="worker${i}${DOMAINNAME}"
         if [ "$DEBUG" -gt 0 ]; then
-	    echo docker run -d --dns $NAMESERVER_IP -h $hostname --name $hostname -e SPARK_MASTER_IP=master${DOMAINNAME} -e MASTER=spark://master${DOMAINNAME}:7077 $VOLUME_MAP $1:$2 ${MASTER_IP}
+	    echo docker run -d --dns $NAMESERVER_IP --dns-search ${DOMAINNAME#.} -h $hostname --name $hostname -e SPARK_MASTER_IP=master${DOMAINNAME} -e MASTER=spark://master${DOMAINNAME}:7077 $VOLUME_MAP $1:$2 ${MASTER_IP}
         fi
-	WORKER=$(docker run -d --dns $NAMESERVER_IP -h $hostname --name $hostname -e SPARK_MASTER_IP=master${DOMAINNAME} -e MASTER=spark://master${DOMAINNAME}:7077 $VOLUME_MAP $1:$2 ${MASTER_IP})
+	WORKER=$(docker run -d --dns $NAMESERVER_IP --dns-search ${DOMAINNAME#.} -h $hostname --name $hostname -e SPARK_MASTER_IP=master${DOMAINNAME} -e MASTER=spark://master${DOMAINNAME}:7077 $VOLUME_MAP $1:$2 ${MASTER_IP})
 
         if [ "$WORKER" = "" ]; then
             echo "error: could not start worker container from image $1:$2"

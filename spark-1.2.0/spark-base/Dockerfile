@@ -11,6 +11,9 @@ ENV SCALA_HOME /opt/scala-$SCALA_VERSION
 ENV SPARK_HOME /opt/spark-$SPARK_VERSION
 ENV PATH $SPARK_HOME:$SCALA_HOME/bin:$PATH
 
+# Install supporting packages
+RUN apt-get update && apt-get install -y curl nano
+
 # Install Scala
 ADD http://www.scala-lang.org/files/archive/scala-$SCALA_VERSION.tgz /
 RUN (cd / && gunzip < scala-$SCALA_VERSION.tgz)|(cd /opt && tar -xvf -)

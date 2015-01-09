@@ -22,7 +22,7 @@ function deploy_spark_files() {
     deploy_hadoop_files
     cp /root/spark_files/spark-env.sh /opt/spark-$SPARK_VERSION/conf/
     cp /root/spark_files/log4j.properties /opt/spark-$SPARK_VERSION/conf/
-}		
+}
 
 function configure_spark() {
     configure_hadoop $1
@@ -36,4 +36,6 @@ function prepare_spark() {
     create_spark_directories
     deploy_spark_files
     configure_spark $1
+
+    curl -XPUT http://etcd:4001/v2/keys/skydns$(printf %s "/$(hostname)" |tr . / |tac -b -s/) -d value=\"{"host":"$(hostname -i)"}\"
 }
