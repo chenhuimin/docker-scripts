@@ -5,6 +5,7 @@ MAINTAINER omri@iluz.net
 VOLUME [ "/etc/dnsmasq.d" ]
 
 RUN apt-get install -y dnsmasq-base
+RUN apt-get install --no-install-recommends -y dnsutils
 
 RUN echo "user=root" > /etc/dnsmasq.conf
 RUN echo "listen-address=__LOCAL_IP__" >> /etc/dnsmasq.conf
