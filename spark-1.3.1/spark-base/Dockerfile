@@ -9,7 +9,7 @@ ENV SCALA_VERSION 2.10.5
 ENV SPARK_VERSION 1.3.1
 ENV SCALA_HOME /opt/scala-$SCALA_VERSION
 ENV SPARK_HOME /opt/spark-$SPARK_VERSION
-ENV PATH $SPARK_HOME:$SCALA_HOME/bin:$PATH
+ENV PATH $SPARK_HOME/bin:$SCALA_HOME/bin:$PATH
 
 # Install supporting packages
 RUN apt-get update && apt-get install -y curl nano
