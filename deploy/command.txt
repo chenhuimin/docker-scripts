@@ -68,3 +68,9 @@ address="/kafka.cluster/172.17.0.12"
 nameserver 172.17.0.3
 nameserver 192.168.16.1
 nameserver 192.168.1.1
+
+
+#select one worker and execute shell
+docker exec -it worker1.cluster /bin/bash
+cd $SPARK_HOME
+sudo -u hdfs MASTER=spark://master.cluster:7077 HDFS_PREFIX=hdfs://master.cluster:9000 ./bin/spark-shell
