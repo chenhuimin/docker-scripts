@@ -5,7 +5,7 @@ BASEDIR=$(cd $(dirname $0); pwd)
 
 spark_images=( "amplab/spark:0.9.0" "amplab/spark:0.9.1" "amplab/spark:1.0.0" "omriiluz/spark:latest")
 shark_images=( "amplab/shark:0.8.0" )
-NAMESERVER_IMAGE="omriiluz/dnsmasq-precise"
+NAMESERVER_IMAGE="omriiluz/dnsmasq-precise:latest"
 
 start_shell=0
 VOLUME_MAP=""
